@@ -1,0 +1,54 @@
+D:.
+│   app.py
+│   app_backup.py
+│   config.py
+│   README.md
+│
+├───.pytest_cache
+│   │   .gitignore
+│   │   CACHEDIR.TAG
+│   │   README.md
+│   │
+│   └───v
+│       └───cache
+│               stepwise
+│
+├───extra_backup
+│       add_candidate.html
+│       add_job.html
+│       login.html
+│       login1.html
+│       signup.html
+│
+├───sql
+│       create_tables.sql
+│
+├───static
+│   │   plotly.min.js
+│   │
+│   ├───charts
+│   ├───css
+│   │       admin.css
+│   │       candidate.css
+│   │       login.css
+│   │       recruiter.css
+│   │       signup.css
+│   │       style.css
+│   │
+│   └───js
+│           main.js
+│
+└───templates
+        add_interview.html
+        admin.html
+        admin_login.html
+        dashboard_candidate.html
+        dashboard_recruiter.html
+        home_candidate.html
+        home_recruiter.html
+        landing.html
+        login.html
+        signup_candidate.html
+        signup_recruiter.html
+        update_interview.html
+        view_applicants.html
