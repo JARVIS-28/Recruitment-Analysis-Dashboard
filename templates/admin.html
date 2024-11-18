@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+<body>
+    <div class="admin-container">
+        <h2>Admin Page</h2>
+        <!-- Sub-admin creation form remains the same -->
+        <form method="POST" action="{{ url_for('admin') }}">
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" placeholder="e.g., subadmin_johndoe" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div class="form-group">
+                <label for="user_type">User Type:</label>
+                <select id="user_type" name="user_type" required>
+                    <option value="candidate_admin">Candidate Admin</option>
+                    <option value="recruiter_admin">Recruiter Admin</option>
+                </select>
+            </div>
+            <button type="submit" class="btn">Create Sub-Admin</button>
+        </form>
+        <!-- Existing Sub-Admins Section -->
+        <h3>Existing Sub-Admins</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sub_admin in sub_admins %}
+                <tr>
+                    <td>{{ sub_admin.user }}</td>
+                    <td>
+                        <!-- Delete Sub-Admin -->
+                        <form method="POST" action="{{ url_for('admin') }}" style="display:inline;">
+                            <input type="hidden" name="delete_username" value="{{ sub_admin.user }}">
+                            <button type="submit" class="btn">Delete</button>
+                        </form>
+                        <form method="POST" action="{{ url_for('admin') }}" style="display:inline;">
+
+                            <input type="hidden" name="revoke_username" value="{{ sub_admin.user }}">
+                            <select name="revoke_table">
+                                <option value="candidates">Candidates</option>
+                                <option value="recruiters">Recruiters</option>
+                            </select>
+                            <div>
+                                <label>
+                                    <input type="checkbox" name="revoke_privileges" value="SELECT"> SELECT
+                                </label>
+                                <label>
+                                    <input type="checkbox" name="revoke_privileges" value="INSERT"> INSERT
+                                </label>
+                                <label>
+                                    <input type="checkbox" name="revoke_privileges" value="UPDATE"> UPDATE
+                                </label>
+                                <label>
+                                    <input type="checkbox" name="revoke_privileges" value="DELETE"> DELETE
+                                </label>
+                                <label>
+                                    <input type="checkbox" name="revoke_privileges" value="all"> Revoke All Privileges
+                                </label>
+                            </div>
+                            <button type="submit" class="btn">Revoke Privileges</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <button onclick="window.location.href='{{ url_for('logout') }}';" class="btn">Logout</button>
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul class="flashes">
+                    {% for category, message in messages %}
+                        <li class="{{ category }}">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+    </div>
+</body>
+</html>

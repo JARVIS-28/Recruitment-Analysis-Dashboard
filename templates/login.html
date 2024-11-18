@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+</head>
+<body>
+    <div class="login-container">
+        <h2 class="login-heading">Login</h2>
+
+        {% if error %}
+        <div class="error-message" style="color: red;">
+            {{ error }}
+        </div>
+        {% endif %}
+        
+        <form class="login-form" action="{{ url_for('login', type=user_type) }}" method="post">
+            <label for="email">Email:</label><br>
+            <input type="email" id="email" name="email" required><br><br>
+
+            <label for="password">Password:</label><br>
+            <input type="password" id="password" name="password" required><br><br>
+
+            <button type="submit">Login</button>
+        </form>
+
+        <div class="signup-options">
+            <p>Don't have an account?</p>
+            <a href="{{ url_for('signup_candidate') }}">Sign up as Candidate</a> |
+            <a href="{{ url_for('signup_recruiter') }}">Sign up as Recruiter</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidate Home</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/candidate.css') }}">
+    <script>
+        // Function to display selected job details
+        function showJobDetails() {
+            const jobSelect = document.getElementById('job_id');
+            const selectedJobId = jobSelect.value;
+
+            // Hide all job descriptions initially
+            const jobDetails = document.getElementsByClassName('job-detail');
+            for (let i = 0; i < jobDetails.length; i++) {
+                jobDetails[i].style.display = 'none';
+            }
+
+            // Show the selected job details
+            const selectedJobDetail = document.getElementById('job-detail-' + selectedJobId);
+            if (selectedJobDetail) {
+                selectedJobDetail.style.display = 'block';
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Welcome, {{ candidate.first_name }} {{ candidate.last_name }}</h1>
+
+    <!-- Profile Update Section -->
+    <form method="POST" action="/home_candidate">
+        <div style="margin-bottom: 15px;">
+            <label for="email">Email:</label><br>
+            <input type="email" name="email" id="email" value="{{ candidate.email }}" style="width: 100%;">
+        </div>
+        
+        <div style="margin-bottom: 15px;">
+            <label for="phone">Phone:</label><br>
+            <input type="text" name="phone" id="phone" value="{{ candidate.phone }}" style="width: 100%;">
+        </div>
+        
+        <div style="margin-bottom: 15px;">
+            <label for="resume_link">Resume:</label><br>
+            <input type="text" name="resume_link" id="resume_link" value="{{ candidate.resume_link }}" style="width: 100%;">
+        </div>
+    
+        <button type="submit">Update Profile</button>
+    </form>
+    
+    <h3>Your Applications:</h3>
+    <ul>
+    {% for application in applications %}
+        <li>Job: {{ application.job_title }} - Status: {{ application.status }}</li>
+    {% endfor %}
+    </ul>
+
+    <h3>Available Job Postings:</h3>
+    <form method="POST" action="/apply_job">
+        <label for="job_id">Job:</label>
+    
+        <select name="job_id" id="job_id" onchange="showJobDetails()">
+            <option value="" disabled selected>Select a job</option> <!-- Placeholder option -->
+            {% for job in job_postings %}
+                {% if job.last_date >= current_date %}
+                    <option value="{{ job.job_id }}">{{ job.job_title }}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+    </form>
+    
+    <h3>Job Descriptions:</h3>
+    <div>
+        {% for job in job_postings %}
+            <div id="job-detail-{{ job.job_id }}" class="job-detail" style="display: none; border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
+                <h4>{{ job.job_title }}</h4>
+                <p><strong>Description:</strong> {{ job.description }}</p>
+                <p><strong>Recruiter:</strong> {{ job.recruiter_name }}</p>
+                <p><strong>Requirements:</strong> {{ job.requirements }}</p>
+                <p><strong>Last Date to Apply:</strong> {{ job.last_date }}</p>
+    
+                {% if job.last_date >= current_date %}
+                    <form method="POST" action="/apply_job" style="display: inline;">
+                        <input type="hidden" name="job_id" value="{{ job.job_id }}">
+                        <button type="submit">Apply for this Job</button>
+                    </form>
+                {% else %}
+                    <p style="color: red;">The application period for this job has ended.</p>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+    
+
+    <h2>Upcoming Interviews</h2>
+    {% if interviews %}
+        <ul>
+            {% for interview in interviews %}
+                <li>
+                    <strong>Job Title:</strong> {{ interview.job_title }}<br>
+                    <strong>Date:</strong> {{ interview.interview_date }}<br>
+                    <strong>Status:</strong> {{ interview.status }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No upcoming interviews at the moment.</p>
+    {% endif %}
+    
+    
+        <!-- Delete Recruiter Profile Button -->
+        <form action="{{ url_for('delete_candidate_profile') }}" method="post" onsubmit="return confirmDelete();">
+            <button type="submit" class="delete-button">Delete My Profile</button>
+        </form>
+    
+        <script>
+            function confirmDelete() {
+                return confirm("Are you sure you want to delete your profile? This action cannot be undone.");
+            }
+        </script>
+    
+        <!-- Links to Dashboard and Logout -->
+        <div class="title" style="text-align: center; margin-top: 20px;">
+            <button onclick="window.location.href='/dashboard_candidate'">Go To Dashboard</button> 
+            <button onclick="window.location.href='/logout'">Logout</button>   
+        </div>
+</body>
+</html>

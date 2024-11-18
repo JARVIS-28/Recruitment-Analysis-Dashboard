@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Applicants for {{ job.job_title }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/recruiter.css') }}">
+</head>
+<body>
+    <h1>Applicants for {{ job.job_title }}</h1>
+
+    <!-- Applicant List Section -->
+    <section>
+        <h3>Applicant List:</h3>
+        <div>
+            {% if applicants %}
+                <ul>
+                    {% for applicant in applicants %}
+                        <li style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
+                            <h4>{{ applicant.first_name }} {{ applicant.last_name }}</h4>
+                            <p><strong>Application ID:</strong> {{ applicant.application_id }}</p>
+                            <p><strong>Email:</strong> {{ applicant.email }}</p>
+                            <p><strong>Phone:</strong> {{ applicant.phone }}</p>
+                            <p><strong>Resume Link:</strong> <a href="{{ applicant.resume_link }}" target="_blank">View Resume</a></p>
+                            <p><strong>Application Status:</strong> {{ applicant.status }}</p>
+                            
+                            <!-- Schedule Interview Form -->
+                            <form method="POST" action="/schedule_interview" style="margin-top: 10px;">
+                                <input type="hidden" name="application_id" value="{{ applicant.application_id }}">
+                                <label for="interview_date">Interview Date:</label>
+                                <input type="datetime-local" name="interview_date" required min="{{ current_datetime }}"><br>
+                            
+                                <button type="submit">Schedule Interview</button>
+                            </form>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No applicants have applied for this job yet.</p>
+            {% endif %}
+        </div>
+    </section>
+
+    <!-- Navigation Links -->
+    <div class="link-container" style="text-align: center; margin-top: 20px;">
+        <a href="/home_recruiter">Back to Job Postings</a><br>
+        <a href="/dashboard_recruiter">Go to Dashboard</a><br>
+        <a href="/logout">Logout</a>
+    </div>
+</body>
+</html>

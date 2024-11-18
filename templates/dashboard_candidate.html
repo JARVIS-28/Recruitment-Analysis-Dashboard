@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidate Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .card {
+            margin: 20px 0;
+        }
+        .stat-icon {
+            font-size: 50px;
+            color: #007bff;
+        }
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .stat-percentage {
+            font-size: 18px;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1 class="text-center my-4">Candidate Dashboard</h1>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <i class="fas fa-file-alt stat-icon"></i>
+                    <h5 class="card-title">Total Applications</h5>
+                    <p class="stat-value">{{ stats.total_applications }}</p>
+                    <p class="stat-percentage">{{ stats.total_applications_percentage | round(2) }}%</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <i class="fas fa-comments stat-icon"></i>
+                    <h5 class="card-title">Total Interviews</h5>
+                    <p class="stat-value">{{ stats.total_interviews }}</p>
+                    <p class="stat-percentage">{{ stats.total_interviews_percentage | round(2) }}%</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <i class="fas fa-check-circle stat-icon"></i>
+                    <h5 class="card-title">Completed Interviews</h5>
+                    <p class="stat-value">{{ stats.total_completed_interviews }}</p>
+                    <p class="stat-percentage">{{ stats.completed_ratio | round(2) }}%</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <i class="fas fa-times-circle stat-icon" style="color: red;"></i>
+                    <h5 class="card-title">Cancelled Interviews</h5>
+                    <p class="stat-value">{{ stats.total_cancelled_interviews }}</p>
+                    <p class="stat-percentage">{{ stats.cancelled_ratio | round(2) }}%</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <i class="fas fa-clock stat-icon" style="color: orange;"></i>
+                    <h5 class="card-title">Scheduled Interviews</h5>
+                    <p class="stat-value">{{ stats.total_scheduled_interviews }}</p>
+                    <p class="stat-percentage">{{ stats.scheduled_ratio | round(2) }}%</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center my-4">
+        <a href="/logout" class="btn btn-danger">Logout</a>
+        <a href="/home_candidate" class="btn btn-danger">Go Back Home</a>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

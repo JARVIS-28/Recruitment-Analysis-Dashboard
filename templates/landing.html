@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recruitment Dashboard - Landing</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</head>
+<body>
+    <div class="landing-container">
+        <h1>Welcome to the Recruitment Dashboard</h1>
+        <div class="button-container">
+            <button class="btn" onclick="showForm('candidate')">Candidate</button>
+            <button class="btn" onclick="showForm('recruiter')">Recruiter</button>
+            <button class="btn" onclick="window.location.href='/admin_login'">Admin</button>
+        </div>
+    </div>
+
+    <!-- Floating window for login/signup -->
+    <div id="floating-form" class="floating-form" style="display: none;">
+        <div class="form-container">
+            <span class="close-btn" onclick="closeForm()">&times;</span>
+            <h2 id="form-title"></h2>
+            <a href="/login?type=candidate" id="login-candidate" class="form-btn" style="display: none;">Candidate Login</a>
+            <a href="/signup_candidate" id="signup-candidate" class="form-btn" style="display: none;">Candidate Signup</a>
+            <a href="/login?type=recruiter" id="login-recruiter" class="form-btn" style="display: none;">Recruiter Login</a>
+            <a href="/signup_recruiter" id="signup-recruiter" class="form-btn" style="display: none;">Recruiter Signup</a>
+        </div>
+    </div>
+
+    <!--<div id="admin-form" class="floating-form" style="display: none;">
+        <div class="form-container">
+            <span class="close-btn" onclick="closeAdminForm()">&times;</span>
+            <h2>Admin Login</h2>
+            <form id="admin-login-form" onsubmit="return validateAdminPassword()">
+                <input type="password" id="admin-password" placeholder="Enter Admin Password" required>
+                <button type="submit" class="form-btn">Login</button>
+            </form>
+        </div>
+    </div>-->
+
+    <script>
+        function showForm(userType) {
+            const formTitle = document.getElementById('form-title');
+            const loginCandidate = document.getElementById('login-candidate');
+            const signupCandidate = document.getElementById('signup-candidate');
+            const loginRecruiter = document.getElementById('login-recruiter');
+            const signupRecruiter = document.getElementById('signup-recruiter');
+
+            // Reset visibility
+            loginCandidate.style.display = 'none';
+            signupCandidate.style.display = 'none';
+            loginRecruiter.style.display = 'none';
+            signupRecruiter.style.display = 'none';
+
+            // Show form and set appropriate buttons based on user type
+            if (userType === 'candidate') {
+                formTitle.textContent = 'Candidate Options';
+                loginCandidate.style.display = 'block';
+                signupCandidate.style.display = 'block';
+            } else if (userType === 'recruiter') {
+                formTitle.textContent = 'Recruiter Options';
+                loginRecruiter.style.display = 'block';
+                signupRecruiter.style.display = 'block';
+            }
+
+            document.getElementById('floating-form').style.display = 'block';
+        }
+
+        function closeForm() {
+            document.getElementById('floating-form').style.display = 'none';
+        }
+
+        /*function showAdminForm() {
+            document.getElementById('admin-form').style.display = 'block';
+        }
+
+        function closeAdminForm() {
+            document.getElementById('admin-form').style.display = 'none';
+        }*/
+
+       
+    </script>
+</body>
+</html>

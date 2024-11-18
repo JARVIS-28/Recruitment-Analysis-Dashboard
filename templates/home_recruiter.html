@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recruiter Home</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/recruiter.css') }}">
+</head>
+<body>
+    <h1>Welcome, {{ recruiter.recruiter_name }}</h1>
+
+    <!-- Recruiter Profile Update -->
+    <h3>Update Your Profile</h3>
+    <form method="POST" action="/home_recruiter">
+        <label for="email">Email:</label>
+        <input type="email" name="email" value="{{ recruiter.email }}" required><br>
+
+        <button type="submit">Update Profile</button>
+    </form>
+
+<!-- Add New Job Posting -->
+<h3>Add a New Job Posting</h3>
+<form method="POST" action="/home_recruiter" onsubmit="return disableButton(this);">
+    <label for="job_title">Job Title:</label>
+    <input type="text" name="job_title" required><br>
+
+    <label for="description">Description:</label>
+    <textarea name="description" required></textarea><br>
+
+    <label for="requirements">Requirements:</label>
+    <input type="text" name="requirements" required><br>
+
+    <label for="last_date">Last Date to Apply:</label>
+    <input type="date" name="last_date" required><br>
+
+    <button type="submit">Add Job Posting</button>
+</form>
+
+<script>
+    function disableButton(form) {
+        // Disable the button to prevent multiple clicks
+        const button = form.querySelector('button[type="submit"]');
+        button.disabled = true;
+        button.innerText = 'Submitting...'; // Change button text to indicate submission
+        return true; // Allow the form to be submitted
+    }
+</script>
+
+    <!-- Flash Message Display -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div>
+            {% for category, message in messages %}
+                {% if category in ['error', 'success', 'danger'] %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+<!--<h1>Welcome, {{ recruiter.recruiter_name }}</h1>-->
+
+    <!-- Current Job Postings -->
+    <h3>Current Job Postings:</h3>
+    <div>
+        {% for job in job_postings %}
+            <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
+                <h4>{{ job.job_title }}</h4>
+                <p><strong>Recruiter:</strong> {{ job.recruiter_name }}</p>
+                <p><strong>Description:</strong> {{ job.description }}</p>
+                <p><strong>Requirements:</strong> {{ job.requirements }}</p>
+                <p><strong>Last Date to Apply:</strong> {{ job.last_date }}</p>
+    
+                <!-- View Applicants Button -->
+                <form action="/view_applicants/{{ job.job_id }}" method="get">
+                    <button type="submit">View Applicants</button>
+                </form>
+
+            </div>
+        {% endfor %}
+    </div>
+    
+    <h3>Upcoming Interviews:</h3>
+    <div>
+        {% if upcoming_interviews %}
+        {% for interview in upcoming_interviews %}
+            <div id="interview-{{ interview.interview_id }}" style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
+                <h4>{{ interview.job_title }} - Interview with {{ interview.first_name }} {{ interview.last_name }}</h4>
+                <p><strong>Interview Date:</strong> {{ interview.interview_date.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+                <p><strong>Status:</strong> {{ interview.status }}</p>
+
+                    <!-- Completed Button -->
+                    <form action="javascript:void(0);" method="post" style="display:inline;" onsubmit="showCompletionPopup('{{ interview.interview_id }}')">
+                        <button type="submit" id="completed-btn-{{ interview.interview_id }}" {% if interview.status == 'completed' %}disabled{% endif %}>Completed</button>
+                    </form>
+    
+                    <!-- Cancelled Button -->
+                    <form action="/update_interview_status" method="post" style="display:inline;" onsubmit="disableButtons('{{ interview.interview_id }}')">
+                        <input type="hidden" name="interview_id" value="{{ interview.interview_id }}">
+                        <input type="hidden" name="status" value="cancelled">
+                        <button type="submit" id="cancelled-btn-{{ interview.interview_id }}" {% if interview.status == 'cancelled' %}disabled{% endif %}>Cancelled</button>
+                    </form>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No upcoming interviews.</p>
+        {% endif %}
+    </div>
+    <!-- Delete Recruiter Profile Button -->
+    <form action="{{ url_for('delete_recruiter_profile') }}" method="post" onsubmit="return confirmDelete();">
+        <button type="submit" class="delete-button">Delete My Profile</button>
+    </form>
+
+    <script>
+        function confirmDelete() {
+            return confirm('Are you sure you want to delete your profile?');
+        }
+    
+        function showCompletionPopup(interviewId) {
+            const popup = document.createElement('div');
+            popup.style.position = 'fixed';
+            popup.style.top = '50%';
+            popup.style.left = '50%';
+            popup.style.transform = 'translate(-50%, -50%)';
+            popup.style.padding = '20px';
+            popup.style.backgroundColor = '#fff';
+            popup.style.border = '1px solid #ccc';
+            popup.style.zIndex = '1000';
+    
+            popup.innerHTML = `
+                <h4>Update Application Status</h4>
+                <form action="/update_application_status" method="post" onsubmit="removeInterview('${interviewId}')">
+                    <input type="hidden" name="interview_id" value="${interviewId}">
+                    <input type="hidden" name="status" value="completed">
+                    <button type="submit" name="application_status" value="hired">Hired</button>
+                    <button type="submit" name="application_status" value="rejected">Rejected</button>
+                </form>
+                <button onclick="closePopup()">Cancel</button>
+            `;
+    
+            document.body.appendChild(popup);
+        }
+    
+        function closePopup() {
+            const popup = document.querySelector('div[style*="z-index: 1000"]');
+            if (popup) {
+                document.body.removeChild(popup);
+            }
+        }
+    
+        function removeInterview(interviewId) {
+            const interviewElement = document.getElementById(`interview-${interviewId}`);
+            if (interviewElement) {
+                interviewElement.remove();
+            }
+        }
+    </script>
+
+    <!-- Links to Dashboard and Logout -->
+    <div class="title" style="text-align: center; margin-top: 20px;">
+        <button onclick="window.location.href='/dashboard_recruiter'">Go To Dashboard</button> 
+        <button onclick="window.location.href='/logout'">Logout</button>   
+    </div>
+</body>
+</html>

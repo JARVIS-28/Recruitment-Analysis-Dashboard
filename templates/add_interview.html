@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Interview</title>
+</head>
+<body>
+    <h2>Add Interview</h2>
+    <form method="POST" action="/add_interview">
+        <label>Application ID:</label>
+        <input type="number" name="application_id" required><br>
+
+        <label>Interview Date:</label>
+        <input type="datetime-local" name="interview_date" required><br>
+
+        <label>Status:</label>
+        <select name="status">
+            <option value="scheduled">Scheduled</option>
+            <option value="completed">Completed</option>
+            <option value="cancelled">Cancelled</option>
+        </select><br>
+
+        <button type="submit">Schedule Interview</button>
+    </form>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Interview</title>
+</head>
+<body>
+    <h2>Update Interview</h2>
+    <form method="POST" action="/update_interview/{{ interview.interview_id }}">
+        <label>Application ID:</label>
+        <input type="number" name="application_id" value="{{ interview.application_id }}" required><br>
+
+        <label>Interview Date:</label>
+        <input type="datetime-local" name="interview_date" value="{{ interview.interview_date }}" required><br>
+
+        <label>Status:</label>
+        <select name="status">
+            <option value="scheduled" {% if interview.status == 'scheduled' %}selected{% endif %}>Scheduled</option>
+            <option value="completed" {% if interview.status == 'completed' %}selected{% endif %}>Completed</option>
+            <option value="cancelled" {% if interview.status == 'cancelled' %}selected{% endif %}>Cancelled</option>
+        </select><br>
+
+        <label>Feedback:</label>
+        <textarea name="feedback">{{ interview.feedback }}</textarea><br>
+
+        <button type="submit">Update Interview</button>
+    </form>
+
+    <a href="/dashboard">Go to Dashboard</a>
+</body>
+</html>
