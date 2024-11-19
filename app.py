@@ -694,6 +694,8 @@ def dashboard_recruiter():
         stats['total_jobs_percentage'] = (stats['total_jobs'] / stats['total_applications']) * 100  # Adjusted to be a percentage of total applications
         stats['total_applications_percentage'] = (stats['total_applications'] / stats['total_applications']) * 100  # This will always be 100%
         stats['total_interviews_percentage'] = (stats['total_interviews'] / stats['total_applications']) * 100  # Adjusted to be a percentage of total applications
+        
+        stats['avg_applications_per_job'] = (stats['total_applications'] / stats['total_jobs']) if stats['total_jobs'] > 0 else 0
     else:
         stats['success_rate'] = 0
         stats['total_jobs_percentage'] = 0
